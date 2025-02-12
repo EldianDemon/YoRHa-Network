@@ -1,0 +1,144 @@
+:root {
+  --headerColor: rgb(133, 115, 95);
+  --textColor: rgb(230, 230, 230);
+  --backgroundColor: rgb(107, 99, 88);
+  --componentBackgroundColor: rgb(77, 71, 61);
+  --componentBorder: 1px solid rgb(63, 63, 63);
+  --componentPadding: 20px;
+  --componentRadius: 15px;
+
+  --logoColor: black;
+
+  --btnActive: gold;
+}
+
+[theme="dark"] {
+  --headerColor: rgb(20, 20, 20);
+  --textColor: rgb(230, 230, 230);
+  --backgroundColor: rgb(20, 20, 20);
+  --componentBackgroundColor: rgb(20, 20, 20);
+  --componentBorder: 1px solid rgb(191, 191, 191);
+}
+
+@import url('./styles/_normalize.scss');
+
+html {
+  overflow-y: scroll;
+  box-sizing: border-box;
+  background-color: var(--backgroundColor);
+  color: var(--textColor);
+}
+
+//Scroll надо пофиксить
+
+::-webkit-scrollbar {
+  width: 10px;
+
+  &-track {
+    background: #000000;
+  }
+
+  &-thumb {
+    border-radius: 15px;
+    background: #f8f8f8;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+a {
+  color: unset;
+  text-decoration: unset;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+ul {
+  margin: unset;
+  padding: unset;
+}
+
+li {
+  list-style-type: none;
+}
+
+.input {
+  padding-left: 10px;
+  padding-right: 10px;
+  border: unset;
+  border-radius: 15px;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 7px;
+  font-size: 15px;
+  color: rgb(249, 247, 247);
+  background-color: rgb(107, 107, 107);
+  border: 1px solid rgb(46, 46, 46);
+  // border: 1px solid rgb(236, 196, 17);
+
+  &_active {
+    color: var(--btnActive)
+  }
+
+  &:hover {
+    color: var(--btnActive)
+  }
+}
+
+.App {
+  margin-top: 20px;
+  padding-top: 79px;
+  padding-bottom: 20px;
+
+  &__container {
+    display: flex;
+    gap: 20px;
+  }
+}
+
+.leftContainer {
+  display: flex;
+  position: sticky;
+  flex: 0 0 auto;
+  gap: var(--componentPadding);
+  top: 90px;
+  height: 100%;
+}
+
+.container {
+  max-width: 72%;
+  margin: 0 auto;
+}
+
+@import 
+url('./components/header/_header.scss'),
+url('./components/nav/_nav.scss'),
+url('./components/content/_content.scss'),
+url('./components/common/logo/_logo.scss'),
+url('./components/content/profile/_profile.scss'),
+url('./components/content/news/_news.scss'),
+url('./components/content/posts/_posts.scss'),
+url('./components/content/users/_users.scss'),
+url('./components/common/form/_form.scss'),
+url('./components/common/auth/_auth.scss'),
+url('./components/common/auth/notAuth/_notAuth.scss'),
+url('./components//content/users/user/userSkeleton/_userSkeleton.scss'),
+url('./components/content/messenger/_messenger.scss'),
+url('./components/content/messenger/inChat/_inChat.scss'),
+url('./components/content/messenger/serverNav/_serverNav.scss'),
+url('./components/header/bell/_bell.scss')

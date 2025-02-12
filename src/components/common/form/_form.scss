@@ -1,0 +1,85 @@
+.form {
+    display: flex;
+    margin-top: 20px;
+    &__container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--componentPadding);
+      border-radius: var(--componentRadius);
+      background-color: var(--componentBackgroundColor);
+    }
+  
+    &__body {
+      display: flex; 
+      flex-direction: column; /* Центрация элементов внутри формы */
+      padding: 10px;
+      border-radius: var(--componentRadius);
+      background-color: rgb(180, 157, 130);
+    }
+  
+    &__label {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      gap: 5px;
+
+      &__container {
+        display: flex;
+        align-items: center;
+      }
+  
+      &_c {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        right: -145px;
+      }
+  
+      &__error {
+        color: red;
+      }
+  
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  
+    &__input {
+      padding-left: 5px;
+      border: 1px solid gray;
+      border-radius: var(--componentRadius);
+  
+      &_c {
+        cursor: pointer;
+      }
+  
+      &_err {
+        border: none;
+        border-radius: var(--componentRadius);
+        outline: 2px solid red;
+        outline-offset: 2px;
+      }
+  
+      &:focus {
+        outline-color: rgb(240, 186, 8);
+      }
+    }
+  
+    &__btn {
+      cursor: pointer;
+      margin: 0 auto;
+      margin-top: 10px;
+      border: 1px solid gray;
+      border-radius: var(--componentRadius);
+    }
+  
+    &__sign {
+      text-align: center;
+    }
+  &__error {
+    color: rgb(255, 30, 0);
+  }
+}
+  

@@ -1,0 +1,22 @@
+.nav {
+    padding: var(--componentPadding);
+    border: var(--componentBorder);
+    border-radius: var(--componentRadius);
+    background-color: var(--componentBackgroundColor);
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__item {
+        cursor: pointer;
+        font-size: 18px;
+
+        &_active {
+            color: var(--btnActive);
+        }
+
+    }
+}

@@ -1,0 +1,29 @@
+.header {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    border-bottom: var(--componentBorder);
+    background-color: var(--headerColor);
+
+    &__container {
+        margin: 0 0 50px 0;
+    }
+
+    &__list {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__item {
+
+        &_user {
+            display: flex;
+            margin-left: auto;
+            align-items: center;
+            gap: 15px;
+        }
+
+    }
+}

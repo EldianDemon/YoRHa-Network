@@ -1,0 +1,19 @@
+{
+    "lists": [
+        {
+            "id": "1",
+            "name": "Messenger",
+            "root": "/messenger"
+        },
+        {
+            "id": "2",
+            "name": "Users",
+            "root": "/users"
+        },
+        {
+            "id": "3",
+            "name": "Posts",
+            "root": "/posts"
+        }
+    ]
+}

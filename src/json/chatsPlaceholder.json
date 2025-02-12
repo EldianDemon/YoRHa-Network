@@ -1,0 +1,138 @@
+{
+    "channels": [
+        {
+            "idChannel": "0",
+            "channelName": "test channel",
+            "channelDscr": "testing channel",
+            "users": [
+                {
+                    "idUser": "0",
+                    "messeges": [
+                        {
+                            "idMessege": "0",
+                            "date": "2025:01:19:20",
+                            "text": "Hello test Comrade!"
+                        },
+                        {
+                            "idMessege": "1",
+                            "date": "2025:01:19:27",
+                            "text": "Hello test Comrade2!"
+                        },
+                        {
+                            "idMessege": "2",
+                            "date": "2025:01:19:33",
+                            "text": "Hello test Comrade3!"
+                        },
+                        {
+                            "idMessege": "3",
+                            "date": "2025:01:19:46",
+                            "text": "Hello test Comrade4!"
+                        },
+                        {
+                            "idMessege": "4",
+                            "date": "2025:01:19:52",
+                            "text": "Hello test Comrade5!"
+                        }
+                    ]
+                },
+                {
+                    "idUser": "1",
+                    "messeges": [
+                        {
+                            "idMessege": "0",
+                            "date": "2025:01:19:18",
+                            "text": "Hello test Comrade!"
+                        },
+                        {
+                            "idMessege": "1",
+                            "date": "2025:01:19:12",
+                            "text": "Hello test Comrade2!"
+                        },
+                        {
+                            "idMessege": "2",
+                            "date": "2025:01:19:09",
+                            "text": "Hello test Comrade3!"
+                        },
+                        {
+                            "idMessege": "3",
+                            "date": "2025:01:19:04",
+                            "text": "Hello test Comrade4!"
+                        },
+                        {
+                            "idMessege": "4",
+                            "date": "2025:01:19:00",
+                            "text": "Hello test Comrade5!"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "idChannel": "1",
+            "channelName": "test channel2",
+            "channelDscr": "testing channel",
+            "users": [
+                {
+                    "idUser": "0",
+                    "messeges": [
+                        {
+                            "idMessege": "0",
+                            "date": "2025:01:19:20",
+                            "text": "Hello test Comrade!"
+                        },
+                        {
+                            "idMessege": "1",
+                            "date": "2025:01:19:27",
+                            "text": "Hello test Comrade2!"
+                        },
+                        {
+                            "idMessege": "2",
+                            "date": "2025:01:19:33",
+                            "text": "Hello test Comrade3!"
+                        },
+                        {
+                            "idMessege": "3",
+                            "date": "2025:01:19:46",
+                            "text": "Hello test Comrade4!"
+                        },
+                        {
+                            "idMessege": "4",
+                            "date": "2025:01:19:52",
+                            "text": "Hello test Comrade5!"
+                        }
+                    ]
+                },
+                {
+                    "idUser": "1",
+                    "messeges": [
+                        {
+                            "idMessege": "0",
+                            "date": "2025:01:19:18",
+                            "text": "Hello test Comrade!"
+                        },
+                        {
+                            "idMessege": "1",
+                            "date": "2025:01:19:12",
+                            "text": "Hello test Comrade2!"
+                        },
+                        {
+                            "idMessege": "2",
+                            "date": "2025:01:19:09",
+                            "text": "Hello test Comrade3!"
+                        },
+                        {
+                            "idMessege": "3",
+                            "date": "2025:01:19:04",
+                            "text": "Hello test Comrade4!"
+                        },
+                        {
+                            "idMessege": "4",
+                            "date": "2025:01:19:00",
+                            "text": "Hello test Comrade5!"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

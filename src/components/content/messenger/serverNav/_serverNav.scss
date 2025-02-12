@@ -1,0 +1,23 @@
+.serverNav {
+    padding: var(--componentPadding);
+    border: var(--componentBorder);
+    border-radius: var(--componentRadius);
+    background-color: var(--componentBackgroundColor);
+
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(50, 50, 50) transparent;
+    }
+
+    &__item {}
+
+    &__img {
+        width: 24px;
+        height: 24px;
+        
+    }
+}

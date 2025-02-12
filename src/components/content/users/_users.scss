@@ -1,0 +1,57 @@
+:root {
+    --gaping: 12px
+}
+
+.users {
+
+    &__nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &__list {
+            display: flex;
+            gap: 10px;
+        }
+        &__item {
+
+        }
+        &__btn {
+            &_active {
+                color: red; 
+            }
+        }
+    }
+
+
+    &__list {
+        display: flex;
+        margin-top: 10px;
+        flex-wrap: wrap;
+        gap: var(--gaping);
+    }
+
+    &__item {
+        display: flex;
+        flex: 1 0 100%;
+        padding: 10px;
+        border: var(--componentBorder);
+        border-radius: var(--componentRadius);
+        background-color: var(--componentBackgroundColor);
+
+        &__container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        &__avatar {
+            width: 72px;
+            height: 72px;
+        }
+
+        &__name {
+            font-size: 32px;
+        }
+
+    }
+}

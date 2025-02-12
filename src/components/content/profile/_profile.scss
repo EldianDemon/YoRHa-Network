@@ -1,0 +1,149 @@
+.profile {
+    border: var(--componentBorder);
+    border-radius: var(--componentRadius);
+    background-color: var(--componentBackgroundColor);
+
+    &__wallpaper {
+        position: relative;
+        display: flex;
+        height: 130px;
+        padding: 20px;
+        justify-content: flex-end;
+        align-items: flex-start;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    &__options {
+
+        &__list {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &__item {}
+
+        &__btn {
+            background-color: rgb(189, 143, 15) !important;
+
+            &_f {
+                background-color: black !important;
+            }
+        }
+
+    }
+
+    &__container {
+        display: flex;
+        padding: 0 20px;
+        transform: translateY(-20%);
+        justify-content: space-between;
+        gap: 10px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        color: var(--main-color);
+        background-color: var(--back-color);
+    }
+
+    &__avatarContainer {
+        width: 150px;
+    }
+
+    &__imgContainer {
+        cursor: pointer;
+        position: absolute;
+        top: -95px;
+    }
+
+    &__avatar {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        flex: 0 0 auto;
+        object-fit: cover;
+        object-position: 50% 20%;
+        border-radius: 20px;
+
+        &__container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &__btn {
+            cursor: pointer;
+            display: flex;
+            padding: 0;
+            align-items: flex-end;
+            gap: 10px;
+            background-color: unset;
+            border: none;
+        }
+
+        &__sendBtn {
+            cursor: pointer;
+            position: absolute;
+            top: 160px;
+        }
+    }
+
+    &__avatarChanger {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    &__name {
+        font-size: 26px;
+    }
+
+    &__dscr {
+        font-size: 14px;
+    }
+
+    &__btm {
+        display: flex;
+        gap: 20px;
+    }
+
+    &_right {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        align-items: flex-start;
+        flex: 1 0 auto;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    &__textarea {
+        border-radius: 10px;
+    }
+
+    &__btn {
+        align-self: center;
+    }
+}
+
+.profile__imgContainer:hover .profile__avatar {
+    filter: brightness(0.5);
+}
+
+.profile__imgContainer:hover .profile__avatarChanger {
+    opacity: 1;
+}
