@@ -1,3 +1,7 @@
+# The Application is Under Development! 🚧
+
+We are actively working on improving the functionality and stability of the application. Please note that some features may change or be added in the future.
+
 # Getting Started 🚀  
 
 Welcome to **YoRHa-Network**! Before you dive in, make sure everything is set up properly.  
@@ -11,7 +15,9 @@ Ensure you have the following installed:
 ## Running the Application ▶️  
 
 1. Start with this command to install dependencies:
- ### `npm install`
+ ### `npm install` 
+ or try instead (There might be version conflicts):
+ ### `npm install --force` 
 
 2. Navigate to the backend directory:  
    ```sh
