@@ -1,5 +1,6 @@
 .form {
     display: flex;
+    position: relative;
     margin-top: 20px;
     &__container {
       display: flex;
@@ -79,6 +80,9 @@
       text-align: center;
     }
   &__error {
+    position: absolute;
+    z-index: 1000;
+    top: -1px;
     color: rgb(255, 30, 0);
   }
 }

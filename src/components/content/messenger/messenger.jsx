@@ -10,7 +10,7 @@ const Messenger = (props) => {
 
     return (
         <section className='messenger'>
-            personal
+            In progress...
             <ServerNavContainer />
             <Outlet /> 
         </section>

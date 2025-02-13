@@ -17,6 +17,9 @@
     }
 
     &__item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
 
         &_user {
             display: flex;

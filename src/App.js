@@ -4,7 +4,6 @@ import NoMatch from './components/content/noMatch/noMatch'
 import Header from './components/header/header'
 import Nav from './components/nav/nav'
 import News from './components/content/news/news'
-import Posts from './components/content/posts/posts'
 import ProfileContainer from './components/content/profile/profileContainer'
 import UsersContainer from './components/content/users/usersContainer'
 import LoginContainer from './components/content/login/loginContainer'
@@ -48,7 +47,6 @@ const App = () => {
             </Route>
             <Route path='/users' element={<UsersContainer />} />
             <Route path='/news' element={<News />} />
-            <Route path='/posts' element={<Posts />} />
           </Routes>
         </div>
       </div>

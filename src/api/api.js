@@ -29,17 +29,16 @@ export const API = {
             .then(response => response.data)
     },
     getUsers: (sort, filter) => {
-
         return instance.get(`users?sort=${sort}&filter=${filter}`)
             .then(response => response.data)
     },
 
     removeFriend: (id) => {
-        return instance.delete(`/friends/remove/${id}`)
+        return instance.delete(`friends/remove/${id}`)
             .then(response => response.data)
     },
     addFriend: (id) => {
-        return instance.post(`/friends/add/${id}`)
+        return instance.post(`friends/add/${id}`)
             .then(response => response.data)
     }
 }

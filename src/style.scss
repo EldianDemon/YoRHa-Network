@@ -1,3 +1,5 @@
+@import url('./styles/_normalize');
+
 :root {
   --headerColor: rgb(133, 115, 95);
   --textColor: rgb(230, 230, 230);
@@ -19,8 +21,6 @@
   --componentBackgroundColor: rgb(20, 20, 20);
   --componentBorder: 1px solid rgb(191, 191, 191);
 }
-
-@import url('./styles/_normalize.scss');
 
 html {
   overflow-y: scroll;
@@ -113,11 +113,13 @@ li {
 
 .leftContainer {
   display: flex;
+  flex-direction: column;
   position: sticky;
   flex: 0 0 auto;
   gap: var(--componentPadding);
   top: 90px;
   height: 100%;
+  width: 150px;
 }
 
 .container {
@@ -128,11 +130,12 @@ li {
 @import 
 url('./components/header/_header.scss'),
 url('./components/nav/_nav.scss'),
+url('./components/common/demo/_demo.scss'),
 url('./components/content/_content.scss'),
 url('./components/common/logo/_logo.scss'),
 url('./components/content/profile/_profile.scss'),
+url('./components/content/profile/posts/_posts.scss'),
 url('./components/content/news/_news.scss'),
-url('./components/content/posts/_posts.scss'),
 url('./components/content/users/_users.scss'),
 url('./components/common/form/_form.scss'),
 url('./components/common/auth/_auth.scss'),

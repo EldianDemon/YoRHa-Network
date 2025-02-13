@@ -1,4 +1,6 @@
 .profile {
+    position: relative;
+    min-height: 250px;
     border: var(--componentBorder);
     border-radius: var(--componentRadius);
     background-color: var(--componentBackgroundColor);
@@ -35,9 +37,11 @@
     }
 
     &__container {
+        position: absolute;
         display: flex;
-        padding: 0 20px;
-        transform: translateY(-20%);
+        align-items: center;
+        padding: 20px;
+        top: 0;
         justify-content: space-between;
         gap: 10px;
         border-top-left-radius: 15px;

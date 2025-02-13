@@ -23,6 +23,8 @@ const Login = (props) => {
     const sendData = async (formData) => {
         const err = await props.sendData(formData)
         if(err) setError(err.error)
+        
+
     }
 
     const { register, handleSubmit } = useForm()

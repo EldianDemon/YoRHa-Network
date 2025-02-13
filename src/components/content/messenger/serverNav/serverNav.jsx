@@ -10,6 +10,8 @@ const ServerNav = (props) => {
                     {props.server.avatar ? <img src={props.server.avatar} alt="serverAvatar" className='serverNav__img' /> : <div>{props.server.name}</div>}  
                 </li>
                 )} */}
+                <li>Server item placeholder 1</li>
+                <li>Server item placeholder 2</li>
             </ul>
         </nav>
     )

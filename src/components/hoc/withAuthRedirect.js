@@ -11,8 +11,9 @@ export const WithAuthRedirect = (Component) => {
             if(props.isAuth == false) focusOnLogin()
         }, [props.isAuth])
     
-        if(props.isAuth) return <Component {...props} />
-        return <NotAuth isAuth={props.isAuth} authMessage={props.authMessage} />
+        if(props.isAuth || props.isDemo) return <Component {...props} />
+        if(!props.isDemo) return <NotAuth isAuth={props.isAuth} authMessage={props.authMessage} />
+        
         
     }
     const ConnectedComponent = connect(mapStateToProps, {getAuthThunkCreator})(RedirectedComponent)
@@ -23,6 +24,7 @@ export const WithAuthRedirect = (Component) => {
 
 const mapStateToProps = (state) => {
     return {
+        isDemo: state.app.isDemo,
         isAuth: state.auth.isAuth,
         authMessage: state.auth.authMessage
     }

@@ -1,5 +1,5 @@
 import { API } from '../api/api'
-import { setInit } from './appReducer'
+import { setInit } from './appReducer.ts'
 import { getAuthThunkCreator } from './authReducer.ts'
 
 const CLEAR_CACHE = 'CLEAR_CACHE'

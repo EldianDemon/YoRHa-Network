@@ -1,7 +1,12 @@
 .auth {
     
     &__link {
-        color: red;
+        color: rgb(24, 24, 24);
+        text-decoration: underline;
+
+        &:hover {
+            color: var(--btnActive);
+        }
     }
 
     &__avatar {

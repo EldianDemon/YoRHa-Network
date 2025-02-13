@@ -45,6 +45,7 @@ export const getAuthThunkCreator = () => (dispatch) => {
         })
         .catch(err => {
             dispatch(getAuthActionCreator(false, null, err.message))
+            console.log(err)
         })
 }
 
