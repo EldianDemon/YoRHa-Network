@@ -1,18 +1,19 @@
 import React from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
-import InChatPlaceHolder from './inChat/inChatPlaceholder/inChatPlaceholder'
-import ServerNavContainer from './serverNav/serverNavContainer'
+import s from './messenger.module.scss'
+import { NavLink, Outlet, Route, Routes } from 'react-router-dom'
+import Servers from './servers/servers'
 
 const Messenger = (props) => {
 
-    const location = useLocation()
-    const messengerPath = location.pathname
-
     return (
-        <section className='messenger'>
-            In progress...
-            <ServerNavContainer />
-            <Outlet /> 
+        <section className={s.messenger}>
+            <nav className={s.nav}>
+                <NavLink to='chats' className={s.private}>
+                    Private Messages
+                </NavLink>
+                <Servers />
+            </nav>
+            <Outlet />
         </section>
     )
 }

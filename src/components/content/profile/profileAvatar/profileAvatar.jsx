@@ -17,11 +17,11 @@ const ProfileAvatar = (props) => {
 
     return (
         <div className='profile__avatar__container'>
-            <button onClick={onClickPhotoChange} className='profile__avatar__btn'>
+            <button onClick={!props.isOwner ? onClickPhotoChange : () => alert('Вы не владелец')} className='profile__avatar__btn'>
                 <img src={file ? file : (props.avatar || avatarPlaceholder)} alt="avatar" className='profile__avatar' />
-                {!props.isOwner ? <input type="file" onChange={handleFileChange} ref={inputFile} style={{ display: 'none' }} /> : null}
+                {!props.isOwner && <input type="file" onChange={handleFileChange} ref={inputFile} style={{ display: 'none' }} />}
             </button>
-            {file ? <button className='btn profile__avatar__sendBtn'>Send Photo</button> : null}
+            {file && <button className='btn profile__avatar__sendBtn'>Send Photo</button>}
         </div>
     )
 }

@@ -3,32 +3,29 @@ import { API } from "../api/api"
 const GET_PROFILE = 'GET_PROFILE'
 const SET_FRIEND = 'SET_FRIEND'
 
-
 type profileType = {
+    isOwn: null | boolean,
     id: null | number,
     email: null | string,
     name: null | string,
-    name2: null | string,
-    photo: null | string,
+    avatar: null | string,
     status: null | string,
     dscr: null | string
 }
 type initialStateType = {
     profile: null | profileType,
-    isFriend: boolean
 }
 
 const initialState: initialStateType = {
     profile: {
+        isOwn: null,
         id: null,
         email: null,
         name: null,
-        name2: null,
-        photo: null,
+        avatar: null,
         status: null,
         dscr: null,
     },
-    isFriend: false
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -37,15 +34,15 @@ const profileReducer = (state = initialState, action) => {
             ...state,
             profile: {
                 ...state.profile,
-                id: action.id_user,
+                isOwn: action.isOwn,
+                id: action.id,
                 email: action.email,
-                name: action.name_user,
-                name2: action.name2_user,
-                photo: action.photo_user,
-                status: action.status_user,
-                dscr: action.dscr_user
+                username: action.username,
+                avatar: action.avatar,
+                status: action.status,
+                dscr: action.dscr
             },
-            isFriend: action.isFriend
+            isFriend: action.isFriend 
         }
         case SET_FRIEND: return {
             ...state,
@@ -56,18 +53,19 @@ const profileReducer = (state = initialState, action) => {
     }
 }
 
-const getProfile = (profile, isFriend) => {
-    return { type: GET_PROFILE, ...profile, isFriend }
+const getProfile = (profile) => {
+    return { type: GET_PROFILE, ...profile}
 }
 const setFriend = (status) => {
     return { type: SET_FRIEND, status }
 }
 
 export const getProfileThunk = (id) => (dispatch) => {
+
     API.getProfile(id)
         .then(data => {
-            if (data.resultCode === 0) dispatch(getProfile(data.profile, data.isFriend))
-            console.log(data)
+            if (data.resultCode === 0) dispatch(getProfile(data.profile))
+                console.log(data.profile)
         })
         .catch(error => {
             console.log('Ошибка запроса профиля: ' + error)
@@ -76,9 +74,8 @@ export const getProfileThunk = (id) => (dispatch) => {
 
 export const addFriendThunk = (id) => (dispatch) => {
     API.addFriend(id)
-        .then(data => {
-            console.log(data.message)
-            dispatch(setFriend(true))
+        .then(() => {
+            dispatch(setFriend(0))
         })
         .catch(error => {
             console.log(error)
@@ -88,7 +85,7 @@ export const removeFriendThunk = (id) => (dispatch) => {
     API.removeFriend(id)
         .then(data => {
             console.log(data.message)
-            dispatch(setFriend(false))
+            dispatch(setFriend(null))
         })
         .catch(error => {
             console.log(error)

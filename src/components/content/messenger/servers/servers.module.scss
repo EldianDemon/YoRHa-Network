@@ -1,0 +1,17 @@
+.container {
+    
+}
+
+.list {
+    height: 40px; //change it later
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+    contain: strict;
+    
+    > * {
+        flex-shrink: 0
+    }
+}

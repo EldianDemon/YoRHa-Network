@@ -9,13 +9,14 @@ import ProfileSkeleton from './profileSkeleton/profileSkeleton'
 
 const ProfileContainer = (props) => {
 
-    const [userId, setUserId] = useState(null)
-    const [isFetching, setFetching] = useState(true)
-
     const userIdParams = useParams()
 
+    const [isFetching, setFetching] = useState(true)
+
     const fetchProfile = async () => {
+        setFetching(true)
         await props.getProfileThunk(userIdParams.userId)
+        setFetching(false)
     }
 
     const addFriend = (id) => {
@@ -26,18 +27,9 @@ const ProfileContainer = (props) => {
     }
 
     useEffect(() => {
-
-        setFetching(true)
-        if (!userIdParams.userId) setUserId(props.authId)
-        if (!userId || userId !== userIdParams.userId) {
-            setUserId(props.authId)
-            fetchProfile()
-        }
-        setFetching(false)
-
+        fetchProfile()
     }, [userIdParams.userId])
 
-    console.log(isFetching)
     if (isFetching) return <ProfileSkeleton />
     else return <Profile
         profile={props.profile}
@@ -52,7 +44,6 @@ const mapStateToProps = (state) => {
     return {
         profile: state.profile.profile,
         authId: state.auth.id,
-        isFriend: state.profile.isFriend
     }
 }
 

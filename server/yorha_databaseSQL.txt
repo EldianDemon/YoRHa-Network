@@ -1,0 +1,197 @@
+-- Пользователи
+CREATE TABLE Users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Серверы
+CREATE TABLE Servers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL,
+    owner_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (owner_id) REFERENCES Users(id)
+);
+
+-- Каналы
+CREATE TABLE Channels (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    server_id INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('text', 'voice')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (server_id) REFERENCES Servers(id)
+);
+
+-- Участники серверов
+CREATE TABLE ServerMembers (
+    user_id INTEGER NOT NULL,
+    server_id INTEGER NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, server_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (server_id) REFERENCES Servers(id)
+);
+
+-- Друзья
+CREATE TABLE Friends (
+    user_id INTEGER NOT NULL,
+    friend_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, friend_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (friend_id) REFERENCES Users(id)
+);
+
+-- Инвайты в друзья
+CREATE TABLE FriendInvites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER NOT NULL,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'accepted', 'rejected')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES Users(id),
+    FOREIGN KEY (receiver_id) REFERENCES Users(id)
+);
+
+-- Блокировки
+CREATE TABLE Blocks (
+    user_id INTEGER NOT NULL,
+    blocked_user_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, blocked_user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (blocked_user_id) REFERENCES Users(id)
+);
+
+-- Медиа
+CREATE TABLE Media (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('file', 'voice')),
+    url TEXT NOT NULL,
+    metadata TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Сообщения в каналах
+CREATE TABLE Messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    channel_id INTEGER NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('text', 'media')),
+    content TEXT,
+    media_id INTEGER,
+    reply_to_message_id INTEGER,
+    is_viewed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES Users(id),
+    FOREIGN KEY (channel_id) REFERENCES Channels(id),
+    FOREIGN KEY (media_id) REFERENCES Media(id),
+    FOREIGN KEY (reply_to_message_id) REFERENCES Messages(id)
+);
+
+-- Личные сообщения
+CREATE TABLE DirectMessages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('text', 'media')),
+    content TEXT,
+    media_id INTEGER,
+    reply_to_message_id INTEGER,
+    is_viewed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES Users(id),
+    FOREIGN KEY (receiver_id) REFERENCES Users(id),
+    FOREIGN KEY (media_id) REFERENCES Media(id),
+    FOREIGN KEY (reply_to_message_id) REFERENCES DirectMessages(id)
+);
+
+-- Группы
+CREATE TABLE Groups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL,
+    created_by INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES Users(id)
+);
+
+-- Участники групп
+CREATE TABLE GroupMembers (
+    group_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (group_id, user_id),
+    FOREIGN KEY (group_id) REFERENCES Groups(id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+-- Сообщения в группах
+CREATE TABLE GroupMessages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('text', 'media')),
+    content TEXT,
+    media_id INTEGER,
+    reply_to_message_id INTEGER,
+    is_viewed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES Users(id),
+    FOREIGN KEY (group_id) REFERENCES Groups(id),
+    FOREIGN KEY (media_id) REFERENCES Media(id),
+    FOREIGN KEY (reply_to_message_id) REFERENCES GroupMessages(id)
+);
+
+-- Роли на серверах
+CREATE TABLE ServerRoles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    server_id INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    permissions TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (server_id) REFERENCES Servers(id)
+);
+
+-- Роли пользователей на серверах
+CREATE TABLE UserServerRoles (
+    user_id INTEGER NOT NULL,
+    server_id INTEGER NOT NULL,
+    role_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, server_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (server_id) REFERENCES Servers(id),
+    FOREIGN KEY (role_id) REFERENCES ServerRoles(id)
+);
+
+-- Уведомления
+CREATE TABLE Notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+-- Просмотры сообщений
+CREATE TABLE MessageViews (
+    message_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (message_id, user_id),
+    FOREIGN KEY (message_id) REFERENCES Messages(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);

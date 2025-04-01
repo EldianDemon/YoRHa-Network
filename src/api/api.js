@@ -40,6 +40,11 @@ export const API = {
     addFriend: (id) => {
         return instance.post(`friends/add/${id}`)
             .then(response => response.data)
+    },
+
+    checkRequests: () => {
+        return instance.get('requests')
+            .then(response => response.data)
     }
 }
 

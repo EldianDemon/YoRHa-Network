@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { focusOnLogin } from '../../utilities/focusOn'
 import { getAuthThunkCreator } from '../../reducers/authReducer.ts'
-import NotAuth from '../common/auth/notAuth/notAuth'
  
 export const WithAuthRedirect = (Component) => {
     const RedirectedComponent = (props) => {
@@ -12,7 +11,7 @@ export const WithAuthRedirect = (Component) => {
         }, [props.isAuth])
     
         if(props.isAuth || props.isDemo) return <Component {...props} />
-        if(!props.isDemo) return <NotAuth isAuth={props.isAuth} authMessage={props.authMessage} />
+        if(!props.isDemo) return <div>Авторизация не прошла</div> 
         
         
     }

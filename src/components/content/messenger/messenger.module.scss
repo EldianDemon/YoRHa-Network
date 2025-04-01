@@ -1,0 +1,31 @@
+.messenger {
+   
+}
+
+.nav {
+    text-align: start;
+
+    &__list {
+        display: flex;
+        gap: 10px;
+    }
+
+    &__item {}
+}
+
+.private {
+    background-color: red;
+}
+
+.servers {
+   
+}
+
+.layout {
+    background-color: rgb(132, 121, 107);
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+    }
+}

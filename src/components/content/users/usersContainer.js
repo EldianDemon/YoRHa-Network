@@ -27,7 +27,6 @@ const UsersContainer = (props) => {
 const mapStateToProps = (state) => {
     return {
         idDemo: state.app.isDemo,
-        isInit: state.app.init,
         users: getUsersSelector(state),
         isAuth: getAuth(state)
     }

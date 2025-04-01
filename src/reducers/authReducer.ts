@@ -50,10 +50,11 @@ export const getAuthThunkCreator = () => (dispatch) => {
 }
 
 export const getRegisterThunkCreator = (formData) => (dispatch) => {
+    
     return API.register(formData)
     .then(data => {
         if (data.resultCode === 0) {
-            return true
+            dispatch(getAuthThunkCreator())
         } else {
             return false
         }
@@ -68,7 +69,7 @@ export const getLoginThunkCreator = (formData) => (dispatch) => {
     return API.login(formData)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(getAuthActionCreator(true, data.user.id_user, 'Authorized'))
+                dispatch(getAuthActionCreator(true, data.user.id, 'Authorized'))
             } else {
                 return false
             }

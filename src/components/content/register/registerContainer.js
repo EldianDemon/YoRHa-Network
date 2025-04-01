@@ -1,21 +1,23 @@
 import React from 'react'
-import Register from './register'
 import { connect } from 'react-redux'
 import { getRegisterThunkCreator } from '../../../reducers/authReducer.ts'
+import Register from './register'
 
-class LoginContainer extends React.Component {
-    sendData = (formData) => {
-        return this.props.getRegisterThunkCreator(formData)
+const RegisterContainer = (props) => {
+    
+    const sendData = (formData) => {
+        return props.getRegisterThunkCreator(formData)
     }
-    render() {
-        return <Register sendData={this.sendData} />
-    }
+
+    return (
+        <Register sendData={sendData} auth={props.auth} />
+    )
 }
 
 const mapStateToProps = (state) => {
     return {
-
+        auth: state.auth,
     }
 }
 
-export default connect(mapStateToProps, { getRegisterThunkCreator })(LoginContainer)
+export default connect(mapStateToProps, { getRegisterThunkCreator })(RegisterContainer)

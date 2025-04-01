@@ -5,32 +5,48 @@
 .users {
 
     &__nav {
+
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         &__list {
             display: flex;
             gap: 10px;
         }
-        &__item {
 
-        }
+        &__item {}
+
         &__btn {
             &_active {
-                color: red; 
+                color: red;
             }
         }
+
+        &__top {
+            cursor: pointer;
+            z-index: 1000;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            top: auto;
+            bottom: 20px;
+        }
+
     }
 
 
     &__list {
+
         display: flex;
-        margin-top: 10px;
+        padding-top: 40px;
         flex-wrap: wrap;
         gap: var(--gaping);
+
     }
 
     &__item {
+
         display: flex;
         flex: 1 0 100%;
         padding: 10px;

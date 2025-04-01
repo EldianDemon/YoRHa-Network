@@ -9,8 +9,11 @@ import UsersContainer from './components/content/users/usersContainer'
 import LoginContainer from './components/content/login/loginContainer'
 import RegisterContainer from './components/content/register/registerContainer'
 import Messenger from './components/content/messenger/messenger'
-import InChatContainer from './components/content/messenger/inChat/inChatContainer'
 import AccountContainer from './components/content/account/accountContainer'
+import Servers from './components/content/messenger/servers/servers'
+import Server from './components/content/messenger/servers/server/server'
+import Chats from './components/content/messenger/chats/chats'
+import Chat from './components/content/messenger/chats/chat/chat'
 
 const App = () => {
 
@@ -19,38 +22,37 @@ const App = () => {
     return paths
   }
 
-  const isMessengerPage = location.pathname.startsWith('/messenger')
-
   return (
     <div className='App'>
       <Header />
       <div className='container App__container'>
-
         {!locator('/login', '/register', '/account/main').includes(location.pathname) &&
-
           <div className='leftContainer'>
             <Nav />
           </div>
         }
         <div className='content'>
           <Routes>
-
             <Route path='/register' element={<RegisterContainer />} />
             <Route path='/login' element={<LoginContainer />} />
             <Route path='/account/main' element={<AccountContainer />} />
-
             <Route path='/' element={<Navigate to='/messenger' />} />
             <Route path='*' element={<NoMatch />} />
             <Route path='/profile/:userId' element={<ProfileContainer />} />
             <Route path='/messenger' element={<Messenger />}>
-              <Route path='server/:serverId' element={<InChatContainer />} />
+              <Route path='chats' element={<Chats />}>
+                <Route path=':chatId' element={<Chat />} />
+              </Route>
+              <Route path='servers'>
+                <Route index element={<Servers />} />
+                <Route path=':serverId' element={<Server />} />
+              </Route>
             </Route>
             <Route path='/users' element={<UsersContainer />} />
             <Route path='/news' element={<News />} />
           </Routes>
         </div>
       </div>
-
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
+import CustomForm, { CustomFormInput } from '../../common/form/form'
 
 const Login = (props) => {
 
@@ -12,7 +13,7 @@ const Login = (props) => {
         if (props.auth.isAuth) {
             navigate(`/profile/${props.auth.id}`)
         }
-        console.log(props.profile)
+        console.log(props.auth.id)
     }, [props.auth.isAuth])
 
     const [hidePass, toggleHide] = useState(true)
@@ -22,9 +23,7 @@ const Login = (props) => {
 
     const sendData = async (formData) => {
         const err = await props.sendData(formData)
-        if(err) setError(err.error)
-        
-
+        if (err) setError(err.error)
     }
 
     const { register, handleSubmit } = useForm()
@@ -33,13 +32,23 @@ const Login = (props) => {
         <section className='form'>
             <div className='container form__container'>
                 {error ? <h3 className='form__error'>{error}</h3> : null}
-                <form onSubmit={handleSubmit((formData) => { sendData(formData) })} className='form__body'>
+                <CustomForm onSubmit={handleSubmit((formData) => { sendData(formData) })}>
                     <label className='form__label'>
-                        <input {...register('email', { required: true })} type="email" name="email" placeholder='example@exp.ex' className='form__input' />
+                        <CustomFormInput
+                        register={register('email', { required: true })}
+                        type="email"
+                        name="email"
+                        placeholder='example@exp.ex'
+                        className='form__input' />
                     </label>
                     <label className='form__label'>
                         <div className='form__label__container'>
-                            <input {...register('password')} type={hidePass ? 'password' : 'text'} className='form__input' />
+                            <CustomFormInput
+                            register={register('password')}
+                            name='password'
+                            placeholder='your password'
+                            type={hidePass ? 'password' : 'text'}
+                            className='form__input' />
                             <input type="checkbox" onChange={handleCheckboxChange} className='form__input' />
                             Показать пароль
                         </div>
@@ -50,7 +59,7 @@ const Login = (props) => {
                     <NavLink to='/register' className='form__sign'>
                         Sign in
                     </NavLink>
-                </form>
+                </CustomForm>
             </div>
         </section>
     )

@@ -1,5 +1,4 @@
 import { API } from '../api/api'
-import { setInit } from './appReducer.ts'
 import { getAuthThunkCreator } from './authReducer.ts'
 
 const CLEAR_CACHE = 'CLEAR_CACHE'
@@ -35,8 +34,6 @@ const getUsersActionCreator = (users) => {
 }
 
 export const getUsersThunkCreator = (sort, filter) => (dispatch) => {
-
-    dispatch(setInit(true))
     API.getUsers(sort, filter)
         .then(data => {
             console.log(data)
@@ -46,7 +43,6 @@ export const getUsersThunkCreator = (sort, filter) => (dispatch) => {
             dispatch(getAuthThunkCreator())
             console.error('Ошибка:', err.message)
         })
-        .finally(() => {dispatch(setInit(false))})
 }
 
 export default usersReducer
