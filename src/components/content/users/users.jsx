@@ -1,9 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import User from './user/user'
 import UserSkeleton from './user/userSkeleton/userSkeleton'
 import Nav from './nav/nav'
+import WithAuthRedirect from '../../hoc/withAuthRedirect'
+import { useSelector, useDispatch } from 'react-redux'
+import { getUsers } from '../../../reducers/usersReducer.ts'
 
-const Users = (props) => {
+const Users = () => {
+
+    const [sort, setSort] = useState('important')
+    const [byFriends, setByFriends] = useState(false)
+
+    const users = useSelector((state) => state.users.users)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getUsers(sort, byFriends))
+    }, [users])
 
     console.log('render users')
 
@@ -12,12 +26,11 @@ const Users = (props) => {
             <Nav />
             <ul className='users__list'>
                 {
-                    props.users.length === 0
+                    users?.length === 0
                         ?
                         <UserSkeleton iterations={3} />
                         :
-                        !props.isDemo &&
-                        props.users.map(el =>
+                        users?.map(el =>
                             <li key={el.id} className='users__item'>
                                 <User id={el.id} username={el.username} avatar={el.avatar} status={el.status} />
                             </li>)
@@ -27,4 +40,4 @@ const Users = (props) => {
     )
 }
 
-export default Users
+export default WithAuthRedirect(Users) 

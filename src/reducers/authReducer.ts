@@ -1,93 +1,121 @@
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { API } from '../api/api'
 
-const GET_AUTH = 'GET_AUTH'
-
-type initialStateType = {
-    isAuth: null | boolean,
-    id: null | number,
-    authMessage: null | string
+interface AuthState {
+    isAuth: boolean | null
+    id: number | null
+    authMessage: string | null
 }
-type authAction = {
-    type: string,
-    auth: boolean,
-    id: null | number,
+
+interface AuthPayload {
+    isAuth: boolean
+    id: number
     message: string
 }
 
-const initialState: initialStateType = {
+const initialState: AuthState = {
     isAuth: null,
     id: null,
     authMessage: null
 }
 
-const authReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case GET_AUTH:
-            return {
-                ...state,
-                isAuth: action.auth,
-                id: action.id,
-                authMessage: action.message
-            }
-        default: return state
+const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        // Обработка getAuth
+        builder
+            .addCase(getAuth.pending, (state) => {
+                state.authMessage = 'Pending authorization'
+            })
+            .addCase(getAuth.fulfilled, (state, { payload }) => {
+                state.isAuth = payload.isAuth
+                state.id = payload.id
+                state.authMessage = payload.message
+            })
+            .addCase(getAuth.rejected, (state) => {
+                state.isAuth = false
+                state.id = null
+                state.authMessage = 'Auth request failed'
+            })
+
+        // Обработка login
+        builder
+            .addCase(login.fulfilled, (state, { payload }) => {
+                state.isAuth = true
+                state.id = payload.id
+                state.authMessage = 'Authorized'
+            })
+            .addCase(login.rejected, (state) => {
+                state.authMessage = 'Login failed'
+            })
+
+        // Обработка logout
+        builder
+            .addCase(logout.fulfilled, (state) => {
+                state.isAuth = false
+                state.id = null
+                state.authMessage = null
+            })
     }
-}
+})
 
-const getAuthActionCreator = (auth: boolean, id: number | null, message: string): authAction => {
-    return { type: GET_AUTH, auth, id, message }
-}
-
-export const getAuthThunkCreator = () => (dispatch) => {
-    API.getAuth()
-        .then(data => {
-            if (data.resultCode === 0) dispatch(getAuthActionCreator(data.isAuth, data.id, 'Authorized'))
-            dispatch(getAuthActionCreator(data.isAuth, data.id, 'You are not authorized'))
-        })
-        .catch(err => {
-            dispatch(getAuthActionCreator(false, null, err.message))
-            console.log(err)
-        })
-}
-
-export const getRegisterThunkCreator = (formData) => (dispatch) => {
-    
-    return API.register(formData)
-    .then(data => {
-        if (data.resultCode === 0) {
-            dispatch(getAuthThunkCreator())
-        } else {
-            return false
-        }
-    })
-    .catch(error => {
-        return error
-    })
-}
-
-export const getLoginThunkCreator = (formData) => (dispatch) => {
-
-    return API.login(formData)
-        .then(data => {
+export const getAuth = createAsyncThunk(
+    'auth/getAuth',
+    async (_, { rejectWithValue }) => {
+        try {
+            const data = await API.getAuth()
             if (data.resultCode === 0) {
-                dispatch(getAuthActionCreator(true, data.user.id, 'Authorized'))
-            } else {
-                return false
+                return { isAuth: true, id: data.id, message: 'Authorized' }
             }
-        })
-        .catch(error => {
-            if (error.status === 404) return { error: 'Почтовый адрес или пароль неверен' }
-            return { error: 'Неизвестная ошибка' }
-        })
-}
+            throw new Error(data.message || 'Not authorized')
+        } catch (err) {
+            return rejectWithValue(err.message)
+        }
+    }
+)
 
-export const logoutThunkCreator = () => (dispatch) => {
-    API.logout()
-    .then(() => {
-        dispatch(getAuthThunkCreator())
-    })
-    .catch(err => {
-        console.log(err)
-    })
-}
+export const login = createAsyncThunk(
+    'auth/login',
+    async (formData: { email: string, password: string }, { rejectWithValue }) => {
+        try {
+            const data = await API.login(formData)
+            if (data.resultCode === 0) {
+                return { id: data.user.id }
+            }
+            throw new Error('Invalid email or password')
+        } catch (err) {
+            return rejectWithValue(
+                err.response?.status === 404
+                    ? { err: 'Invalid email or password' }
+                    : { err: 'Unknown error occurred' }
+            )
+        }
+    }
+)
 
-export default authReducer
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async () => {
+        try {
+            await API.logout()
+            return { isAuth: false, id: null, authMessage: null }
+        } catch (err) {
+            console.log(err.message)
+        }
+        
+    }
+)
+
+export const register = createAsyncThunk(
+    'auth/register',
+    async (formData: { email: string, password: string }, { dispatch }) => {
+        const data = await API.register(formData)
+        if (data.resultCode === 0) {
+            await dispatch(getAuth())
+        }
+    }
+)
+
+export default authSlice.reducer

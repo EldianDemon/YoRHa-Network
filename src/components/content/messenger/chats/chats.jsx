@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import s from './chats.module.scss'
 import useSocketSetup from '../../../../hooks/useSocketSetup'
@@ -6,6 +6,10 @@ import useSocketSetup from '../../../../hooks/useSocketSetup'
 const Chats = () => {
 
     useSocketSetup()
+
+    useEffect(() => {
+
+    }, [])
 
     const chatsPlaceholder = [
         { id: 1, name: 'Antony', isOwner: false, message: 'Some message here', messageDate: 'must be a date', isViewed: false },

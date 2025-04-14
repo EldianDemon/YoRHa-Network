@@ -1,7 +1,8 @@
 import { useEffect } from "react"
 import socket from "../socket"
 import { useDispatch } from "react-redux"
-import { logoutThunkCreator } from "../reducers/authReducer.ts"
+import { logout } from "../reducers/authReducer.ts"
+
 
 const useSocketSetup = () => {
 
@@ -10,7 +11,7 @@ const useSocketSetup = () => {
     useEffect(() => {
         socket.connect()
         socket.on('connect_error', () => {
-            dispatch(logoutThunkCreator())
+            dispatch(logout())
         })
 
         return () => {

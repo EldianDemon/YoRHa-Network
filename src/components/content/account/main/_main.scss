@@ -1,0 +1,31 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: var(--componentPadding);
+    border: var(--componentBorder);
+    border-radius: var(--componentRadius);
+    background-color: var(--componentBackgroundColor);
+
+    &__customize {}
+
+    &__security {
+
+        &__list {}
+
+        &__item {}
+
+    }
+
+    &__devices {
+
+        &__list {}
+
+        &__item {}
+    }
+
+    &__btn {
+        align-self: flex-end;
+        margin-top: 10px;
+    }
+}

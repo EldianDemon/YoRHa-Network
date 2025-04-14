@@ -9,11 +9,6 @@
             "id": "2",
             "name": "Users",
             "root": "/users"
-        },
-        {
-            "id": "3",
-            "name": "Posts",
-            "root": "/posts"
         }
     ]
 }

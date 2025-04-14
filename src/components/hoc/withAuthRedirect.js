@@ -1,30 +1,33 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { focusOnLogin } from '../../utilities/focusOn'
-import { getAuthThunkCreator } from '../../reducers/authReducer.ts'
- 
-export const WithAuthRedirect = (Component) => {
-    const RedirectedComponent = (props) => {
+import { getAuth } from '../../reducers/authReducer.ts'
+
+const WithAuthRedirect = (Component) => {
+    const RedirectedComponent = () => {
+
+        const isAuth = useSelector((state) => state.auth.isAuth)
+        const dispatch = useDispatch()
+
         useEffect(() => {
-            if(props.isAuth === null) props.getAuthThunkCreator()
-            if(props.isAuth == false) focusOnLogin()
-        }, [props.isAuth])
-    
-        if(props.isAuth || props.isDemo) return <Component {...props} />
-        if(!props.isDemo) return <div>Авторизация не прошла</div> 
-        
-        
-    }
-    const ConnectedComponent = connect(mapStateToProps, {getAuthThunkCreator})(RedirectedComponent)
+            if (isAuth === null) {
+                dispatch(getAuth())
+            }
+            if (isAuth === false) {
+                focusOnLogin()
+            }
+        }, [isAuth, dispatch])
 
-    return ConnectedComponent
+        if (isAuth) return <Component />
+
+        return <div>Авторизация не прошла</div>
+
+
+    }
+
+    return RedirectedComponent
 
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isDemo: state.app.isDemo,
-        isAuth: state.auth.isAuth,
-        authMessage: state.auth.authMessage
-    }
-}
+export default WithAuthRedirect
+

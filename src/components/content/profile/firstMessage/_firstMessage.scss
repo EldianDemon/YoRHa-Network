@@ -1,0 +1,29 @@
+.firstMessage {
+    z-index: 1000;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    padding-top: 40vh;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background-color: #0008;
+
+    &__form {
+        display: flex;
+        padding: var(--componentPadding);
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        border-radius: var(--componentRadius);
+        background-color: var(--componentBackgroundColor);
+    }
+
+    &__message {
+        resize: none;
+        border-radius: 9px;
+    }
+}

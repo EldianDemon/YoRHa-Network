@@ -1,41 +1,23 @@
-const SET_INIT = 'SET_INIT' as const
-const SET_DEMO = 'SET_DEMO' as const
+import { createSlice } from '@reduxjs/toolkit'
 
 interface AppState {
     isDemo: boolean
 }
 
 const initialState: AppState = {
-    isDemo: false,
-};
-
-interface SetInitAction {
-    type: typeof SET_INIT
-    status: boolean
+    isDemo: false
 }
 
-interface SetDemoAction {
-    type: typeof SET_DEMO
-    status: boolean
-}
-
-type AppActions = SetInitAction | SetDemoAction
-
-const appReducer = (state = initialState, action: AppActions): AppState => {
-    switch (action.type) {
-        case SET_DEMO:
-            return {
-                ...state,
-                isDemo: action.status,
-            };
-        default:
-            return state;
+const appSlice = createSlice({
+    name: 'app',
+    initialState,
+    reducers: {
+        setDemo: (state) => {
+            state.isDemo = !state.isDemo
+        }
     }
-}
-
-export const setDemo = (status: boolean): SetDemoAction => ({
-    type: SET_DEMO,
-    status,
 })
 
-export default appReducer
+export const { setDemo } = appSlice.actions
+
+export default appSlice.reducer

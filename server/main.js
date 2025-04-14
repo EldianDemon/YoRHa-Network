@@ -139,12 +139,23 @@ const authorizeUser = (socket, next) => {
   }
 } //if user not logged in he has no right to use Socket.io
 
+const onlineUsers = new Map()
+
 io.use(wrap(sessionMiddleware))
 io.use(authorizeUser)
-io.on('connect', (socket) => {
+io.on('connection', (socket) => {
+
+  onlineUsers.set(socket.request.session.user.id, socket.id)
+
   console.log(socket.request.session.user.username)
   console.log('A user connected:', socket.id) //id is now randomized
-});
+
+
+  io.on('disconnect', () => {
+    console.log('Disconnected')
+  })
+
+})
 
 // Маршруты
 
@@ -233,7 +244,7 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.status(500).json({ error: 'Ошибка при выходе из системы' });
+      return res.status(500).json({ message: 'Ошибка при выходе из системы' });
     }
     res.clearCookie('sid');
     res.json({ resultCode: 0, message: 'Выход выполнен успешно' });
@@ -262,20 +273,69 @@ app.get('/profile/:id', async (req, res) => {
       return res.status(404).json({ error: 'User does not exist' });
     }
 
-    return res.json({
-      resultCode: 0,
-      message: 'Getting profile successful',
-      profile: {
-        isOwn: currentUserId === userId,
-        id: profile.id,
-        username: profile.username,
-        email: profile.email,
-        avatar: profile.avatar,
-        dscr: profile.dscr,
-        status: status === 'online' ? 'Online' : formatLastSeen(lastSeen),
-      },
-    });
-  });
+    // Проверяем статус дружбы
+    db.get(
+      `SELECT status FROM Friends 
+       WHERE (id_user_1 = ? AND id_user_2 = ?)
+          OR (id_user_1 = ? AND id_user_2 = ?)`,
+      [currentUserId, userId, userId, currentUserId],
+      (err, friendRow) => {
+        if (err) {
+          return res.status(500).json({ error: err.message })
+        }
+
+        let isFriend = false;
+        let friendStatus = null;
+
+        if (friendRow) {
+          // Если есть запись в Friends
+          isFriend = friendRow.status === 'accepted'
+          friendStatus = friendRow.status
+        } else {
+          // Проверяем FriendInvites если нет в друзьях
+          db.get(
+            `SELECT status FROM FriendInvites 
+             WHERE (sender_id = ? AND receiver_id = ?)
+                OR (sender_id = ? AND receiver_id = ?)`,
+            [currentUserId, userId, userId, currentUserId],
+            (err, inviteRow) => {
+              if (err) {
+                return res.status(500).json({ error: err.message })
+              }
+
+              if (inviteRow) {
+                friendStatus = inviteRow.status
+              }
+
+              sendResponse()
+            }
+          )
+          return
+        }
+
+        sendResponse()
+
+        function sendResponse() {
+          return res.json({
+            resultCode: 0,
+            message: 'Getting profile successful',
+            profile: {
+              isOwn: currentUserId === userId,
+              id: profile.id,
+              username: profile.username,
+              email: profile.email,
+              avatar: profile.avatar,
+              dscr: profile.dscr,
+              status: status === 'online' ? 'Online' : formatLastSeen(lastSeen),
+              isFriend: friendStatus === 'accepted' ? true
+                : friendStatus === 'pending' ? 'pending'
+                  : false
+            },
+          })
+        }
+      }
+    )
+  })
 });
 
 // Получение списка пользователей
@@ -326,46 +386,30 @@ app.get('/users', (req, res) => {
 
     switch (fullFilter) {
       case 'important false':
-        res.json(users);
+        res.json({resultCode: 0, users});
         break;
       case 'important true':
         getFriends();
         break;
       case 'name false':
         users.sort((a, b) => a.name.localeCompare(b.name));
-        res.json(users);
+        res.json({resultCode: 0, users});
         break;
       case 'name true':
         getFriends();
         break;
       default:
-        res.json(users);
+        res.json({resultCode: 0, users});
     }
   });
 });
 
-// Удаление друга
-app.delete('/friends/remove/:id', (req, res) => {
-  const currentUserId = req.session.user?.id_user;
-  const userId = parseInt(req.params.id, 10);
 
-  db.run(
-    `DELETE FROM friends 
-     WHERE (id_user_1 = ? AND id_user_2 = ?) 
-        OR (id_user_1 = ? AND id_user_2 = ?)`,
-    [currentUserId, userId, userId, currentUserId],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error while removing friend: ' + err.message });
-      }
-      res.json({ resultCode: 0, message: 'Friend has been successfully removed' });
-    }
-  );
-});
 
 // Отправка запроса дружбы
-app.post('/friends/add/:id', (req, res) => {
-  const currentUserId = req.session.user?.id_user;
+// Отправка запроса дружбы
+app.post('/friends/add/:id', async (req, res) => {
+  const currentUserId = req.session.user?.id;
   const userId = parseInt(req.params.id, 10);
 
   if (!currentUserId) {
@@ -376,30 +420,77 @@ app.post('/friends/add/:id', (req, res) => {
     return res.status(400).json({ error: 'Cannot add yourself as a friend' });
   }
 
-  db.get(
-    'SELECT * FROM friends WHERE (id_user_1 = ? AND id_user_2 = ?) OR (id_user_1 = ? AND id_user_2 = ?)',
-    [currentUserId, userId, userId, currentUserId],
-    (err, row) => {
-      if (err) {
-        return res.status(500).json({ error: 'Database error', message: err.message });
-      }
-      if (row) {
-        return res.status(400).json({ error: 'Friend request already exists' });
-      }
-
-      db.run(
-        'INSERT INTO friends (id_user_1, id_user_2, id_status) VALUES (?, ?, ?)',
-        [currentUserId, userId, 0],
-        (err) => {
-          if (err) {
-            return res.status(500).json({ error: 'Database error', message: err.message });
-          }
-          res.json({ message: 'Friend request has been sent' });
+  try {
+    // Проверяем существующую дружбу
+    const existingFriendship = await new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM Friends WHERE (id_user_1 = ? AND id_user_2 = ?) OR (id_user_1 = ? AND id_user_2 = ?)',
+        [currentUserId, userId, userId, currentUserId],
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
         }
       );
+    });
+
+    if (existingFriendship) {
+      return res.status(400).json({
+        resultCode: 1,
+        error: existingFriendship.status === 'accepted'
+          ? 'User is already your friend'
+          : 'Friend request already exists'
+      });
     }
-  );
-});
+
+    // Проверяем существующие приглашения
+    const existingInvite = await new Promise((resolve, reject) => {
+      db.get(
+        `SELECT * FROM FriendInvites 
+         WHERE (sender_id = ? AND receiver_id = ?)
+            OR (sender_id = ? AND receiver_id = ?)`,
+        [currentUserId, userId, userId, currentUserId],
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        }
+      );
+    });
+
+    if (existingInvite) {
+      return res.status(400).json({
+        resultCode: 1,
+        error: existingInvite.status === 'pending'
+          ? 'Friend request already sent'
+          : 'Friend request was previously rejected'
+      });
+    }
+
+    // Создаем новый запрос
+    await new Promise((resolve, reject) => {
+      db.run(
+        'INSERT INTO FriendInvites (sender_id, receiver_id, status) VALUES (?, ?, ?)',
+        [currentUserId, userId, 'pending'],
+        function (err) {
+          if (err) reject(err);
+          else resolve();
+        }
+      )
+    })
+
+    res.json({
+      resultCode: 0,
+      message: 'Friend request has been sent',
+      status: 'pending'
+    })
+
+  } catch (err) {
+    res.status(500).json({
+      resultCode: 1,
+      error: 'Database error',
+      message: err.message
+    })
+  }
+})
 
 //Просмотр инвайтов (временное решение, нужно сделать так чтоб сервер сам слал инвайты если они поступают)
 app.get('/notifications', (req, res) => {
@@ -466,11 +557,33 @@ app.put('/friends/decline/:id', (req, res) => {
   )
 })
 
-app.post('/chat/create', (req, res) => {
-  const { creatorId, invitedId } = req.query
+app.get('/messanger/chats/:id', (req, res) => {
+  const currentUserId = req.session.user?.id_user
+  const userId = parseInt(req.params.id, 10)
 
-  if (!creatorId || !invitedId) return res.status(400).json({ error: 'Missing required parameters' });
+  if (currentUserId === userId) {
+    return res.status(400).json({
+      resultCode: 1,  // Можно использовать 1 для ошибок
+      error: 'Cannot write to yourself'
+    })
+  }
 
+  db.all('SELECT * FROM Messages WHERE receiver_id = ?', [userId], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error while getting messages data: ' + err.message });
+    }
+    if (rows.length === 0) {
+      return res.json({
+        resultCode: 2,
+        message: 'You must write your first message'
+      })
+    } else {
+      return res.json({
+        resultCode: 0,
+        messages: rows
+      })
+    }
+  })
 
 })
 

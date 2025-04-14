@@ -1,34 +1,37 @@
 import React from 'react'
-import MainContainer from './main/mainContainer'
+import { NavLink, Outlet } from 'react-router-dom'
+import WithAuthRedirect from '../../hoc/withAuthRedirect'
 
 const Account = () => {
     return (
-        <div className='account'>
-            <div className='container account__container'>
-                <nav>
-                    <ul>
-                        //Selection, selected must apear at right side
-                        <li>
-                            Main
+        <section className='account'>
+            <div className='account__container'>
+                <nav className='account__nav'>
+                    <ul className='account__nav__list'>
+                        <li className='account__nav__item'>
+                            <NavLink to='main' className='account__nav__item__btn'>
+                                Main
+                            </NavLink>
                         </li>
-                        <li>
-                            Personal data
+                        <li className='account__nav__item'>
+                            <NavLink to='personal' className='account__nav__item__btn'>
+                                Personal data
+                            </NavLink>
                         </li>
-                        <li>
-                            Safety
-                        </li>
-                        <li>
-                            etc...
+                        <li className='account__nav__item'>
+                            <NavLink to='safety' className='account__nav__item__btn'>
+                                Safety
+                            </NavLink>
                         </li>
                     </ul>
-                    <button>
+                    <button className='btn account__nav__btn'>
                         Back to YoRHa
                     </button>
                 </nav>
-                <MainContainer />
+                <Outlet />
             </div>
-        </div>
+        </section>
     )
 }
 
-export default Account
+export default WithAuthRedirect(Account) 

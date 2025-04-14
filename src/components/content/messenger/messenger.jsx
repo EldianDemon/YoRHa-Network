@@ -1,7 +1,8 @@
 import React from 'react'
 import s from './messenger.module.scss'
-import { NavLink, Outlet, Route, Routes } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import Servers from './servers/servers'
+import WithAuthRedirect from '../../hoc/withAuthRedirect'
 
 const Messenger = (props) => {
 
@@ -18,4 +19,4 @@ const Messenger = (props) => {
     )
 }
 
-export default Messenger
+export default WithAuthRedirect(Messenger) 

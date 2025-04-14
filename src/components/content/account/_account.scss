@@ -1,0 +1,61 @@
+.account {
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        text-align: start;
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 auto;
+        padding: var(--componentPadding);
+        border: var(--componentBorder);
+        border-radius: var(--componentRadius);
+        background-color: var(--componentBackgroundColor);
+
+        &__list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        &__item {
+            a,
+            button {
+                display: block;
+                width: 100%;
+                padding: 8px 12px;
+                text-align: left;
+                border: none;
+                color: white;
+                background-color: transparent;
+                cursor: pointer;
+                border-radius: 3px;
+                text-decoration: none; 
+
+                &:hover {
+                    background: rgba(255, 200, 0, 0.3);
+                }
+            }
+
+            .active {
+                background: rgba(255, 200, 0, 0.5);
+            }
+        }
+
+        &__btn {
+            align-self: center;
+            margin-top: 20px;
+        }
+    }
+
+    &__btn {
+        align-self: center;
+        margin-top: 20px;
+    }
+}
+

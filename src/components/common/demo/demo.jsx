@@ -1,18 +1,24 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setDemo } from '../../../reducers/appReducer.ts'
 import s from './demo.module.scss'
 
 const Demo = (props) => {
-    console.log(props.isDemo)
+
+    const isDemo = useSelector((state) => state.app.isDemo)
+    const dispatch = useDispatch()
 
     const handleClick = () => {
-        props.setDemo(!props.isDemo)
+        dispatch(setDemo())
     }
+
+    console.log(isDemo)
 
     return (
         <div className={s.container}>
             {/* <button
                 onClick={handleClick}
-                className={`btn ${props.isDemo ? s.btn_active : s.btn}`}
+                className={`btn ${isDemo ? s.btn_active : s.btn}`}
             >
                 Demo Mode
             </button> */}

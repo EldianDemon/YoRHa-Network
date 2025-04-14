@@ -1,8 +1,9 @@
 import React, { memo } from 'react'
-import AuthContainer from '../common/auth/authContainer'
-import LogoContainer from '../common/logo/logoContainer'
-import DemoContainer from '../common/demo/demoContainer'
-import BellContainer from './bell/bellContainer'
+import Auth from '../common/auth/auth'
+import Logo from '../common/logo/logo'
+import Demo from '../common/demo/demo'
+import Bell from './bell/bell'
+
 
 const Header = memo(function Header(props) {
     console.log('render Header')
@@ -11,14 +12,13 @@ const Header = memo(function Header(props) {
             <div className='container header__container'>
                 <ul className='header__list'>
                     <li className='header__item'>
-                        <LogoContainer />
-                        <DemoContainer />
+                        <Logo />
+                        <Demo />
                     </li>
                     <li className='header__item header__item_user'>
-                        <BellContainer />
-                        <AuthContainer />
+                        <Bell />
+                        <Auth />
                     </li>
-                    
                 </ul>
             </div>
         </header>

@@ -1,8 +1,5 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { API } from '../api/api'
-import { getAuthThunkCreator } from './authReducer.ts'
-
-const CLEAR_CACHE = 'CLEAR_CACHE'
-const GET_USERS = 'GET_USERS'
 
 type initialStateType = {
     users: []
@@ -12,37 +9,32 @@ const initialState: initialStateType = {
     users: []
 }
 
-const usersReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case GET_USERS:
-            return {
-                ...state,
-                users: JSON.parse(JSON.stringify(action.users))
-            }
-        case CLEAR_CACHE:
-            return initialState
-        default: return state
+const usersSlice = createSlice({
+    name: 'users',
+    initialState,
+    reducers: {
+
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getUsers.fulfilled, (state, {payload}) => {
+            state.users = payload?.users
+        })
     }
-}
+})
 
-export const clearCache = () => {
-    return { type: CLEAR_CACHE }
-}
+export const getUsers = createAsyncThunk(
+    'users/getUsers',
+    async ({ sort, filter }: { sort: string; filter: string }, { dispatch }) => {
+        try {
+            const data = await API.getUsers(sort, filter)
+            if (data.resultCode === 0) {
+                console.log(data)
+                return { users: data.users }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+)
 
-const getUsersActionCreator = (users) => {
-    return { type: GET_USERS, users }
-}
-
-export const getUsersThunkCreator = (sort, filter) => (dispatch) => {
-    API.getUsers(sort, filter)
-        .then(data => {
-            console.log(data)
-            dispatch(getUsersActionCreator(data))
-        })
-        .catch(err => {
-            dispatch(getAuthThunkCreator())
-            console.error('Ошибка:', err.message)
-        })
-}
-
-export default usersReducer
+export default usersSlice.reducer

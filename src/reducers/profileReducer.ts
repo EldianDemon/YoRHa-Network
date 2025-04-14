@@ -1,95 +1,100 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { API } from "../api/api"
-
-const GET_PROFILE = 'GET_PROFILE'
-const SET_FRIEND = 'SET_FRIEND'
 
 type profileType = {
     isOwn: null | boolean,
     id: null | number,
+    username: null | string,
     email: null | string,
-    name: null | string,
     avatar: null | string,
-    status: null | string,
     dscr: null | string
+    status: null | string,
+    isFriend: null | number
 }
 type initialStateType = {
-    profile: null | profileType,
+    profile: profileType,
 }
 
 const initialState: initialStateType = {
     profile: {
         isOwn: null,
         id: null,
+        username: null,
         email: null,
-        name: null,
         avatar: null,
-        status: null,
         dscr: null,
+        status: null,
+        isFriend: null
     },
 }
 
-const profileReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case GET_PROFILE: return {
-            ...state,
-            profile: {
-                ...state.profile,
-                isOwn: action.isOwn,
-                id: action.id,
-                email: action.email,
-                username: action.username,
-                avatar: action.avatar,
-                status: action.status,
-                dscr: action.dscr
-            },
-            isFriend: action.isFriend 
-        }
-        case SET_FRIEND: return {
-            ...state,
-            isFriend: action.status
-        }
+const profileSlice = createSlice({
+    name: 'profile',
+    initialState,
+    reducers: {
 
-        default: return state
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getProfile.pending, () => {
+                console.log('fetching Profile')
+            })
+            .addCase(getProfile.fulfilled, (state, { payload }) => {
+                state.profile = payload?.profile
+            })
+            .addCase(getProfile.rejected, () => {
+                console.log('error while getting Profile')
+            })
+
+        builder
+            .addCase(removeFriend.fulfilled, (state, { payload }) => {
+                state.profile.isFriend = payload?.isFriend
+            })
     }
-}
+})
 
-const getProfile = (profile) => {
-    return { type: GET_PROFILE, ...profile}
-}
-const setFriend = (status) => {
-    return { type: SET_FRIEND, status }
-}
+export const getProfile = createAsyncThunk(
+    'profile/getProfile',
+    async (id) => {
+        try {
+            const data = await API.getProfile(id)
+            if (data.resultCode === 0) {
+                return { profile: data.profile }
 
-export const getProfileThunk = (id) => (dispatch) => {
+            }
+            console.log(data.profile)
+        } catch (err) {
+            console.log('Ошибка запроса профиля: ' + err)
+        }
+    }
+)
 
-    API.getProfile(id)
-        .then(data => {
-            if (data.resultCode === 0) dispatch(getProfile(data.profile))
-                console.log(data.profile)
-        })
-        .catch(error => {
-            console.log('Ошибка запроса профиля: ' + error)
-        })
-}
+export const sendFriendRequest = createAsyncThunk(
+    'profile/sendFriendRequest',
+    async (id) => {
+        try {
+            const data = await API.addFriend(id)
+            if (data?.resultCode === 0) {
+                return { isFriend: data.isFriend }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+)
 
-export const addFriendThunk = (id) => (dispatch) => {
-    API.addFriend(id)
-        .then(() => {
-            dispatch(setFriend(0))
-        })
-        .catch(error => {
-            console.log(error)
-        })
-}
-export const removeFriendThunk = (id) => (dispatch) => {
-    API.removeFriend(id)
-        .then(data => {
-            console.log(data.message)
-            dispatch(setFriend(null))
-        })
-        .catch(error => {
-            console.log(error)
-        })
-}
+export const removeFriend = createAsyncThunk(
+    'profile/removeFriend',
+    async (id) => {
+        try {
+            const data = await API.removeFriend(id)
+            if (data?.resultCode === 0) {
+                return { isFriend: data.isFriend }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+)
 
-export default profileReducer
+export default profileSlice.reducer

@@ -2,31 +2,38 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 import CustomForm, { CustomFormInput } from '../../common/form/form'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { login } from '../../../reducers/authReducer.ts'
 
-const Login = (props) => {
+const Login = () => {
 
     const [error, setError] = useState(null)
+    const [hidePass, toggleHide] = useState(true)
+    const { register, handleSubmit } = useForm()
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (props.auth.isAuth) {
-            navigate(`/profile/${props.auth.id}`)
-        }
-        console.log(props.auth.id)
-    }, [props.auth.isAuth])
+    
+    const auth = useSelector((state) => state.auth)
 
-    const [hidePass, toggleHide] = useState(true)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (auth.isAuth) {
+            navigate(`/profile/${auth.id}`)
+        }
+    }, [auth.isAuth])
+
     const handleCheckboxChange = (event) => {
         toggleHide(!event.target.checked)
     }
 
     const sendData = async (formData) => {
-        const err = await props.sendData(formData)
-        if (err) setError(err.error)
-    }
+        const result = await dispatch(login(formData))
 
-    const { register, handleSubmit } = useForm()
+        if (result.err) setError(result.err)
+    }
 
     return (
         <section className='form'>
@@ -35,20 +42,20 @@ const Login = (props) => {
                 <CustomForm onSubmit={handleSubmit((formData) => { sendData(formData) })}>
                     <label className='form__label'>
                         <CustomFormInput
-                        register={register('email', { required: true })}
-                        type="email"
-                        name="email"
-                        placeholder='example@exp.ex'
-                        className='form__input' />
+                            register={register('email', { required: true })}
+                            type="email"
+                            name="email"
+                            placeholder='example@exp.ex'
+                            className='form__input' />
                     </label>
                     <label className='form__label'>
                         <div className='form__label__container'>
                             <CustomFormInput
-                            register={register('password')}
-                            name='password'
-                            placeholder='your password'
-                            type={hidePass ? 'password' : 'text'}
-                            className='form__input' />
+                                register={register('password')}
+                                name='password'
+                                placeholder='your password'
+                                type={hidePass ? 'password' : 'text'}
+                                className='form__input' />
                             <input type="checkbox" onChange={handleCheckboxChange} className='form__input' />
                             Показать пароль
                         </div>

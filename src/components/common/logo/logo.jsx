@@ -1,12 +1,22 @@
 import React, { useEffect } from 'react'
 import logo from './../../../img/logo/logo.svg'
-import logoDarkTheme from './../../../img/logo/logoDarkTheme.svg'
 import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-const Logo = (props) => {
+const Logo = () => {
+
+    const id = useSelector((state) => state.auth.id)
+
+    useEffect(() => {
+        
+    }, [id])
+
+    const refreshPage = () => {
+        window.location.reload()
+    }
 
     return (
-        <NavLink to={props.id ? `/profile/${props.id}` : `/profile/notAuthorized`} className='logo__link'>
+        <NavLink to={id ? `/profile/${id}` : `/profile/notAuthorized`} className='logo__link'>
             <img src={logo} alt="" className='logo__img' /> 
         </NavLink>
     )

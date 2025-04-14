@@ -89,7 +89,6 @@ li {
   color: rgb(249, 247, 247);
   background-color: rgb(107, 107, 107);
   border: 1px solid rgb(46, 46, 46);
-  // border: 1px solid rgb(236, 196, 17);
 
   &_active {
     color: var(--btnActive)
@@ -134,12 +133,13 @@ url('./components/common/demo/demo.module.scss'),
 url('./components/content/_content.scss'),
 url('./components/common/logo/_logo.scss'),
 url('./components/content/profile/_profile.scss'),
+url('./components/content/profile/firstMessage/_firstMessage.scss'),
 url('./components/content/profile/posts/_posts.scss'),
 url('./components/content/news/_news.scss'),
 url('./components/content/users/_users.scss'),
 url('./components/common//form/form.module.scss'),
 url('./components/common/auth/auth.module.scss'),
 url('./components//content/users/user/userSkeleton/_userSkeleton.scss'),
-
-
-url('./components/header/bell/_bell.scss')
+url('./components/header/bell/_bell.scss'),
+url('./components/content/account/_account.scss'),
+url('./components/content/account/main/_main.scss')

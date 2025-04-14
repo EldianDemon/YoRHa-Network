@@ -42,7 +42,12 @@ export const API = {
             .then(response => response.data)
     },
 
-    checkRequests: () => {
+    getMessages: (id) => {
+        return instance.get(`/messanger/chats/${id}`)
+        .then(response => response.data)
+    },
+
+    getRequests: () => {
         return instance.get('requests')
             .then(response => response.data)
     }
