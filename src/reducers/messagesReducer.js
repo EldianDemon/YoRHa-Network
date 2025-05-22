@@ -29,7 +29,7 @@ const messagesSlice = createSlice({
 
 export const getMessages = createAsyncThunk(
     'messages/getMessages',
-    async () => {
+    async (id) => {
         try {
             const data = await API.getMessages(id)
             console.log(data)
